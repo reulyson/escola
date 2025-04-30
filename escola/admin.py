@@ -6,7 +6,8 @@ class Estudantes(admin.ModelAdmin):
     list_display = ('id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular') # Campos a serem exibidos
     list_display_links = ('id', 'nome',) # Campos que podem ser clicados
     list_per_page = 20 # Total de registros por pagina
-    search_fields = ('nome',) # Campo de busca por nome
+    search_fields = ('nome', 'cpf',) # Campo de busca por nome
+    ordering = ('nome',)
 
 # Registra os modelos no admin 
 admin.site.register(Estudante, Estudantes)
@@ -16,6 +17,7 @@ class Cursos(admin.ModelAdmin):
     list_display = ('id', 'codigo', 'descricao', 'nivel')
     list_display_links = ('id', 'codigo',)
     search_fields = ('codigo',)
+    ordering = ('codigo',)
 
 admin.site.register(Curso, Cursos)
 
