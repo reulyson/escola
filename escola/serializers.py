@@ -13,10 +13,10 @@ class EstudanteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'nome':'O nome dever conter apenas letras.'})
         # Validação CPF
         if cpf_invalido(dados['cpf']):
-            raise serializers.ValidationError({'cpf':'O CPF deve conter 11 números'})
+            raise serializers.ValidationError({'cpf':'O CPF deve ter um valor válido.'})
         # Validação Celular
         if celular_invalido(dados['celular']):
-            raise serializers.ValidationError({'celular':'Celular deve conter 13 números'})
+            raise serializers.ValidationError({'Celular precisa seguir o modelo: 99 99999-9999'})
         return dados
     
     # Validação única
