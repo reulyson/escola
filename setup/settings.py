@@ -134,5 +134,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated' # Apenas usuários autenticados
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20 # Define que serão vizualizadas 20 itens por página
+    'PAGE_SIZE': 20, # Define que serão vizualizadas 20 itens por página
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.QueryParameterVersioning',
 }

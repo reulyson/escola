@@ -1,5 +1,5 @@
 from escola.models import Estudante, Curso, Matricula
-from escola.serializers import EstudanteSerializer, CursoSerializer, MatriculaSerializer, ListaMatriculasCursoSerializer, ListaMatriculasEstudantesSerializer
+from escola.serializers import EstudanteSerializer, CursoSerializer, MatriculaSerializer, ListaMatriculasCursoSerializer, ListaMatriculasEstudantesSerializer, EstudanteSerializerV2
 from rest_framework import viewsets, generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -9,10 +9,16 @@ class EstudanteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated] # Define que apenas usuários autenticados possam acessar
 
     queryset = Estudante.objects.all() # seleciona todos os dados da tabela estudantes
-    serializer_class = EstudanteSerializer # definindo a serialização que será utilizada
+    # serializer_class = EstudanteSerializer # definindo a serialização que será utilizada
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome'] # Permite ordenar pelo campo nome
     search_fields = ['nome', 'cpf'] # Permite buscar nome e cpf
+
+    # Definindo que versão de API será usada
+    def get_serializer_class(self):
+        if self.request.version == 'v2':
+            return EstudanteSerializerV2
+        return EstudanteSerializer
 
 class CursoViewSet(viewsets.ModelViewSet):
     queryset = Curso.objects.all()    
