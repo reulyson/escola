@@ -25,19 +25,19 @@ class EstudanteSerializer(serializers.ModelSerializer):
     #       raise serializers.ValidationError('O nome deve conter apenas letras.')
     #   return nome
 
-''' Serializers para API Curso '''
+''' Serializers para Curso '''
 class CursoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curso
         fields = '__all__' # passando todos os campos
 
-''' Serializers para API Matricula '''
+''' Serializers para Matricula '''
 class MatriculaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Matricula
         exclude = [] # passando todos os campos
 
-''' Serializers para endpoint matricula/estudante '''
+''' Serializers para matricula/estudante '''
 class ListaMatriculasEstudantesSerializer(serializers.ModelSerializer):
     curso = serializers.ReadOnlyField(source='curso.descricao') # Definindo o campo como somente leitura para descrição do curso
     periodo = serializers.SerializerMethodField() # Definindo um campo que chama um metodo para obter o periodo de forma legivel
@@ -49,7 +49,7 @@ class ListaMatriculasEstudantesSerializer(serializers.ModelSerializer):
     def get_periodo(self, obj):
         return obj.get_periodo_display() # Chamando o método que retorna o valor legível do período
 
-''' Serializers para endpoint matricula/curso '''
+''' Serializers para matricula/curso '''
 class ListaMatriculasCursoSerializer(serializers.ModelSerializer):
     estudante_nome = serializers.ReadOnlyField(source='estudante.nome') # Definindo o campo como somente leitura para o nome do estudante
 
@@ -57,7 +57,7 @@ class ListaMatriculasCursoSerializer(serializers.ModelSerializer):
         model = Matricula
         fields = ['estudante_nome']
 
-'''Nova versão do API Estudante'''
+'''Nova versão de Estudante'''
 class EstudanteSerializerV2(serializers.ModelSerializer):
     class Meta:
         model = Estudante # passando o modelo
