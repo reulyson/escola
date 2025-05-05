@@ -2,19 +2,33 @@ from escola.models import Estudante, Curso, Matricula
 from rest_framework import serializers
 from escola.validators import cpf_invalido, nome_invalido, celular_invalido
 
-''' Serializers para API Estudante '''
+
 class EstudanteSerializer(serializers.ModelSerializer):
+    '''
+    Serializer para o modelo Estudante.
+
+    Campos incluídos:
+    - id
+    - nome
+    - email
+    - cpf
+    - data_nascimento
+    - celular
+
+    Validações aplicadas:
+    - nome: verifica se contém apenas letras
+    - cpf: verifica se o CPF é válido
+    - celular: verifica se segue o formato correto (99 99999-9999)
+    '''
     class Meta:
-        model = Estudante # passando o modelo
-        fields = ['id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular'] # passando os campos que serão exibidos
+        model = Estudante
+        fields = ['id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular']
+
     def validate(self, dados):
-        # Validação Nome
         if nome_invalido(dados['nome']):
             raise serializers.ValidationError({'nome':'O nome dever conter apenas letras.'})
-        # Validação CPF
         if cpf_invalido(dados['cpf']):
             raise serializers.ValidationError({'cpf':'O CPF deve ter um valor válido.'})
-        # Validação Celular
         if celular_invalido(dados['celular']):
             raise serializers.ValidationError({'Celular precisa seguir o modelo: 99 99999-9999'})
         return dados
@@ -25,40 +39,67 @@ class EstudanteSerializer(serializers.ModelSerializer):
     #       raise serializers.ValidationError('O nome deve conter apenas letras.')
     #   return nome
 
-''' Serializers para Curso '''
 class CursoSerializer(serializers.ModelSerializer):
+    '''
+    Serializer para o modelo Curso.
+
+    Inclui todos os campos definidos no modelo.
+    '''
     class Meta:
         model = Curso
-        fields = '__all__' # passando todos os campos
+        fields = '__all__'
 
-''' Serializers para Matricula '''
 class MatriculaSerializer(serializers.ModelSerializer):
+    '''
+    Serializer para o modelo Matriculas.
+
+    Inclui todos os campos definidos no modelo.
+    '''
     class Meta:
         model = Matricula
-        exclude = [] # passando todos os campos
+        exclude = []
 
-''' Serializers para matricula/estudante '''
 class ListaMatriculasEstudantesSerializer(serializers.ModelSerializer):
-    curso = serializers.ReadOnlyField(source='curso.descricao') # Definindo o campo como somente leitura para descrição do curso
-    periodo = serializers.SerializerMethodField() # Definindo um campo que chama um metodo para obter o periodo de forma legivel
+    '''
+    Serializer para exibir as matrículas de um estudante.
+
+    Campos:
+    - curso: descrição do curso (read-only)
+    - periodo: valor legível do período (via método)
+    '''
+    curso = serializers.ReadOnlyField(source='curso.descricao')
+    periodo = serializers.SerializerMethodField()
 
     class Meta:
         model = Matricula
         fields = ['curso', 'periodo']
     
     def get_periodo(self, obj):
-        return obj.get_periodo_display() # Chamando o método que retorna o valor legível do período
+        return obj.get_periodo_display()
 
-''' Serializers para matricula/curso '''
 class ListaMatriculasCursoSerializer(serializers.ModelSerializer):
-    estudante_nome = serializers.ReadOnlyField(source='estudante.nome') # Definindo o campo como somente leitura para o nome do estudante
+    '''
+    Serializer para exibir os nomes dos estudantes matriculados em um curso.
+
+    Campos:
+    - estudante_nome: nome do estudante (read-only)
+    '''
+    estudante_nome = serializers.ReadOnlyField(source='estudante.nome')
 
     class Meta:
         model = Matricula
         fields = ['estudante_nome']
 
-'''Nova versão de Estudante'''
 class EstudanteSerializerV2(serializers.ModelSerializer):
+    '''
+     Versão simplificada do serializer de Estudante.
+
+    Campos incluídos:
+    - id
+    - nome
+    - email
+    - celular
+    '''
     class Meta:
-        model = Estudante # passando o modelo
+        model = Estudante
         fields = ['id', 'nome', 'email', 'celular']

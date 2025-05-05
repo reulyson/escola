@@ -5,44 +5,95 @@ from rest_framework import viewsets, generics, filters
 from rest_framework.throttling import UserRateThrottle
 from django_filters.rest_framework import DjangoFilterBackend
 
-''' ViewSets para visualização dos dados '''
 class EstudanteViewSet(viewsets.ModelViewSet):
+    '''
+    Descrição da ViewSet:
+    - Endpoint para CRUD de estudantes.
+
+    Campos de ordenação:
+    - nome: permite ordenar os resultados por nome.
+
+    Campos de pesquisa:
+    - nome: permite pesquisar o resultado por nome.
+    - cpf: permite pesquisar os resultados por CPF.
+
+    Métodos HTTP Permitidos:
+    - GET, POST, PATCH, DELETE
+
+    Classe de Serializer:
+    - EstudanteSerializer: usado para serialização e desserialização de dados.
+    - Se a versão da API for 'v2', usa EstudanteSerializerV2.
+    '''
+
     # authentication_classes = [BasicAuthentication] # Define que o usuário deve fornecer um nome de usuário e uma senha para acessar as rotas da API.
     # permission_classes = [IsAuthenticated] # Define que apenas usuários autenticados possam acessar
-
-    queryset = Estudante.objects.all().order_by('id') # seleciona todos os dados da tabela estudantes
-    # serializer_class = EstudanteSerializer # definindo a serialização que será utilizada
+    queryset = Estudante.objects.all().order_by('id')
+    # serializer_class = EstudanteSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-    ordering_fields = ['nome'] # Permite ordenar pelo campo nome
-    search_fields = ['nome', 'cpf'] # Permite buscar nome e cpf
+    ordering_fields = ['nome']
+    search_fields = ['nome', 'cpf']
 
-    # Definindo que versão de API será usada
     def get_serializer_class(self):
         if self.request.version == 'v2':
             return EstudanteSerializerV2
         return EstudanteSerializer
 
 class CursoViewSet(viewsets.ModelViewSet):
+    '''
+    Descrição da ViewSet:
+    - Endpoint para CRUD de curso.
+
+    Campos de filtragem:
+    - nivel: permite filtar os cursos pelo nível.
+
+    Métodos HTTP Permitidos:
+    - GET, POST, PATCH, DELETE
+    '''
+
     queryset = Curso.objects.all().order_by('id') 
     serializer_class = CursoSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['nivel']
 
 class MatriculaViewSet(viewsets.ModelViewSet):
+    '''
+    Descrição da ViewSet:
+    - Endpoint para CRUD de estudantes.
+
+    Métodos HTTP Permitidos:
+    - GET, POST.
+
+    Throttle Classes:
+    - MatriculaAnonRateThrottle: Limite de taxa para usuários anônimos
+    - UserRateThrottle: Limite de taxa para usuários autenticados.
+    '''
+
     queryset = Matricula.objects.all().order_by('id')
     serializer_class = MatriculaSerializer
     throttle_classes = [UserRateThrottle, MatriculaAnonRateThrottle]
     http_method_names = ['get', 'post',]
 
 class ListaMatriculaEstudante(generics.ListAPIView):
-    # Método que define o queryset a ser retornado
+    '''
+    Descrição da View:
+    - Lista Matriculas por id de Estudante
+    Parêmetros:
+    - pk (int): O indentificador primário do objeto. Deve ser o número inteiro.
+    '''
+
     def get_queryset(self):
-        queryset = Matricula.objects.filter(estudante_id=self.kwargs['pk']).order_by('id') # Filtrando as matrículas para retornar apenas as do estudante específico
+        queryset = Matricula.objects.filter(estudante_id=self.kwargs['pk']).order_by('id') 
         return queryset
     
     serializer_class = ListaMatriculasEstudantesSerializer
 
 class ListaMatriculaCurso(generics.ListAPIView):
+    '''
+    Descrição da View:
+    - Lista Matriculas por id de Curso
+    Parêmetros:
+    - pk (int): O indentificador primário do objeto. Deve ser o número inteiro.
+    '''
 
     def get_queryset(self):
         queryset = Matricula.objects.filter(curso_id=self.kwargs['pk']).order_by('id')

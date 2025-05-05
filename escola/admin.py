@@ -1,18 +1,16 @@
 from django.contrib import admin
 from escola.models import Estudante, Curso, Matricula
 
-''' Admin para estudantes '''
+
 class Estudantes(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular') # Campos a serem exibidos
-    list_display_links = ('id', 'nome',) # Campos que podem ser clicados
-    list_per_page = 20 # Total de registros por pagina
-    search_fields = ('nome', 'cpf',) # Campo de busca por nome
+    list_display = ('id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular')
+    list_display_links = ('id', 'nome',)
+    list_per_page = 20
+    search_fields = ('nome', 'cpf',)
     ordering = ('nome',)
 
-# Registra os modelos no admin 
 admin.site.register(Estudante, Estudantes)
 
-''' Admin para cursos '''
 class Cursos(admin.ModelAdmin):
     list_display = ('id', 'codigo', 'descricao', 'nivel')
     list_display_links = ('id', 'codigo',)
