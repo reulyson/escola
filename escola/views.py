@@ -4,6 +4,7 @@ from escola.throttles import MatriculaAnonRateThrottle
 from rest_framework import viewsets, generics, filters
 from rest_framework.throttling import UserRateThrottle
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EstudanteViewSet(viewsets.ModelViewSet):
     '''
@@ -54,6 +55,7 @@ class CursoViewSet(viewsets.ModelViewSet):
     serializer_class = CursoSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['nivel']
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class MatriculaViewSet(viewsets.ModelViewSet):
     '''
