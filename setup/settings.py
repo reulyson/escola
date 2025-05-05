@@ -131,7 +131,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication' # Autenticação básica
     ],
      'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated' # Apenas usuários autenticados
+        'rest_framework.permissions.DjangoObjectPermissions'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20, # Define que serão vizualizadas 20 itens por página
